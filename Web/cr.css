@@ -1,0 +1,39 @@
+body {
+  background: linear-gradient(to bottom, #cb12ef, #0000ff);
+}
+.cont {
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  background-color: rgb(110, 237, 63);
+  border-radius: 20px;
+  padding: 4px;
+}
+.row {
+  margin: 20px;
+}
+input {
+  padding: 5px;
+  border-radius: 3px;
+  width: 100%;
+}
+.btns {
+  padding: 4px;
+}
+.btns button {
+  margin: 20px;
+  padding: 5px;
+  width: 80px;
+}
+table {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  background-color: rgb(4, 173, 148);
+  border: 1px solid black;
+}
+th,
+td {
+  padding: 10px;
+}

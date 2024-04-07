@@ -1,0 +1,216 @@
+<html>
+  <head>
+    <title>Crud Application</title>
+    <link rel="stylesheet" href="cr.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        let ar = [];
+
+        // API Call
+
+        $.ajax({
+          url: "https://reqres.in/api/users?page=2",
+          method: "GET",
+          success: function (response) {
+            $.each(response.data, function (index, ele) {
+              if (!ar.includes(ele)) {
+                ar.push(ele);
+              }
+            });
+          },
+          error: function () {
+            console.log("Error occured");
+          },
+        });
+
+        // Disply Table
+
+        $(".dis").click(function () {
+          $("table").remove();
+          var tab = $("<table border=2>");
+          tab.append(
+            "<tr><th>USerID</th>" + "<th>FullName" + "<th>Email</th></tr>"
+          );
+          $.each(ar, function (ind, ele) {
+            tab.append(
+              "<tr id='row" +
+                ele.id +
+                "'>" +
+                "<td>" +
+                ele.id +
+                "</td>" +
+                "<td>" +
+                ele.first_name +
+                " " +
+                ele.last_name +
+                "</td>" +
+                "<td>" +
+                ele.email +
+                "</td>" +
+                "</tr>"
+            );
+          });
+          $("body").append(tab);
+          show(0);
+          var rid = "row" + ar[0].id;
+          $("#" + rid).css({ "background-color": "black", color: "white" });
+        });
+
+        //Next Button
+
+        $(".nxt").click(function () {
+          if ($("table").text() != "") {
+            var i = $("#uid").val();
+            var f = null;
+            if (i != "") {
+              $.each(ar, function (ind, ele) {
+                if (ele.id == i) {
+                  f = ind;
+                }
+              });
+            }
+            if (f != null && f + 1 < ar.length) {
+              show(f + 1);
+              remove("row" + ar[f].id);
+              apply("row" + ar[f + 1].id);
+            } else {
+              show(0);
+              remove("row" + ar[ar.length - 1].id);
+              apply("row" + ar[0].id);
+            }
+          }
+        });
+
+        //Previous Button
+
+        $(".prev").click(function () {
+          if ($("table").text() != "") {
+            var i = $("#uid").val();
+            var f = null;
+            if (i != "") {
+              $.each(ar, function (ind, ele) {
+                if (ele.id == i) {
+                  f = ind;
+                }
+              });
+            }
+            if (f != null && f - 1 >= 0) {
+              show(f - 1);
+              remove("row" + ar[f].id);
+              apply("row" + ar[f - 1].id);
+            } else {
+              show(ar.length - 1);
+              remove("row" + ar[0].id);
+              apply("row" + ar[ar.length - 1].id);
+            }
+          }
+        });
+
+        //Delete Button
+
+        $(".dlt").click(function () {
+          if ($("table").text() != "") {
+            var num = $("#uid").val();
+            console.log(num);
+            $("#uid").val("");
+            $("#fname").val("");
+            $("#email").val("");
+            $.each(ar, function (ind, ele) {
+              if (ele.id == num) {
+                $("#" + "row" + num).remove();
+                ar.splice(ind, 1);
+                show(0);
+                apply("row" + ar[0].id);
+              }
+            });
+          }
+        });
+
+        //Update Button
+
+        $(".upd").click(function () {
+          if ($("table").text() != "") {
+            var num = $("#uid").val();
+            var FullName = $("#fname").val();
+            var email = $("#email").val();
+            for (var i in ar) {
+              if (ar[i].id == num) {
+                ar[i].first_name = FullName.split(" ")[0];
+                ar[i].last_name = FullName.split(" ")[1];
+                ar[i].email = email;
+                $("#" + "row" + num).html(
+                  "<td>" +
+                    ar[i].id +
+                    "</td>" +
+                    "<td>" +
+                    ar[i].first_name +
+                    " " +
+                    ar[i].last_name +
+                    "</td>" +
+                    "<td>" +
+                    ar[i].email +
+                    "</td>"
+                );
+              }
+            }
+          }
+        });
+
+        // Display in text box
+
+        function show(f) {
+          $("#uid").val(ar[f].id);
+          $("#fname").val(ar[f].first_name + " " + ar[f].last_name);
+          $("#email").val(ar[f].email);
+        }
+        // Apply css to rows
+
+        function apply(rid) {
+          $("#" + rid).css({ "background-color": "black", color: "white" });
+        }
+        //Remove CSS to rows
+
+        function remove(rid) {
+          $("#" + rid).css({ "background-color": "", color: "" });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="cont">
+      <div class="row">
+        <label for="Userid"><b>User ID</b></label
+        ><br />
+        <input type="text" name="Userid" id="uid" placeholder="Enter user Id" />
+      </div>
+      <div class="row">
+        <label for="FullName"><b>Full Name</b></label
+        ><br />
+        <input
+          type="text"
+          name="FullName"
+          id="fname"
+          placeholder="Enter FullName"
+        />
+      </div>
+      <div class="row">
+        <label for="email"><b>Email ID</b></label
+        ><br />
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Enter user Email Id"
+        />
+      </div>
+      <div class="btns">
+        <button class="dis">Display</button>
+        <button class="nxt">Next</button>
+        <button class="prev">Previous</button>
+        <button class="dlt">Delete</button>
+        <button class="upd">Update</button>
+      </div>
+    </div>
+  </body>
+</html>
